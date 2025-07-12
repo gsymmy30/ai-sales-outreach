@@ -9,7 +9,7 @@ from openai import AsyncOpenAI
 
 load_dotenv()
 
-# Kafka config
+
 TOPIC_NAME = os.getenv("KAFKA_TOPIC", "email-events")
 consumer = Consumer({
     'bootstrap.servers': os.getenv("KAFKA_BOOTSTRAP_SERVERS"),
@@ -21,12 +21,12 @@ consumer = Consumer({
     'auto.offset.reset': 'earliest'
 })
 
-# Supabase
+
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-# OpenAI Client (new SDK)
+
 client = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 async def process_message(event):
@@ -40,7 +40,7 @@ async def process_message(event):
         return
 
     try:
-        # Research
+        
         research_resp = await client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{
@@ -50,7 +50,7 @@ async def process_message(event):
         )
         research_summary = research_resp.choices[0].message.content.strip()
 
-        # Email
+        
         email_prompt = f"""
 You are writing a personalized cold outbound email to {name} at {company}.
 Use the following research to inform the email:
@@ -67,7 +67,7 @@ Keep the email short, compelling, and confident. Do not include a sign-off or se
         )
         generated_email = email_resp.choices[0].message.content.strip()
 
-        # Save to Supabase
+        
         supabase.table("email_interactions").insert({
             "name": name,
             "company": company,
@@ -78,10 +78,10 @@ Keep the email short, compelling, and confident. Do not include a sign-off or se
             "created_at": datetime.now(timezone.utc).isoformat()
         }).execute()
 
-        print(f"[✅ Success] Inserted email for {name} at {company}")
+        print(f"[Success] Inserted email for {name} at {company}")
 
     except Exception as e:
-        print(f"[❌ Error] {str(e)}")
+        print(f"[Error] {str(e)}")
 
 async def consume():
     consumer.subscribe([TOPIC_NAME])
