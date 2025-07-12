@@ -1,0 +1,52 @@
+# Top-level .gitignore for ai-sales-outreach
+
+# Ignore virtualenvs and Python caches
+backend/venv/
+backend/.env
+backend/__pycache__/
+backend/*.pyc
+backend/.pytest_cache/
+backend/.mypy_cache/
+
+# Ignore secret or config files
+backend/*.env
+backend/.env.*
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore Node and frontend build files
+frontend/node_modules/
+frontend/.next/
+frontend/.env
+frontend/.env.*
+frontend/out/
+frontend/.turbo/
+
+# General Python/Node patterns (in case devs use any tools globally)
+**/venv/
+**/.env
+**/.env.*
+**/__pycache__/
+**/*.pyc
+**/.pytest_cache/
+**/.mypy_cache/
+**/node_modules/
+**/.next/
+**/out/
+**/.turbo/
+
+# Ignore log files
+*.log
+
+# Ignore coverage/report files
+htmlcov/
+coverage.xml
+*.cover
+*.coverage
+
+# Ignore editor configs
+.vscode/
+.idea/
+*.swp
